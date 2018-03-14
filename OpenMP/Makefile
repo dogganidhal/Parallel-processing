@@ -1,13 +1,18 @@
 
+PROG = omptest
+CC = clang++
+CPPFLAGS = -Xpreprocessor -fopenmp
+LDFLAGS =  -lomp
+OBJS = helloomp.o sha512.o
 
-main: helloomp.o sha512.o
-	clang++ -Xpreprocessor -fopenmp -lomp helloomp.o -o helloomp
+$(PROG) : $(OBJS)
+	$(CC) $(LDFLAGS) -o $(PROG) $(OBJS)
 
-helloomp.o: sha512.hpp
-	clang++ helloomp.cpp sha512.hpp
+helloomp.o:
+	$(CC) $(CPPFLAGS) -c helloomp.cpp
 
-sha512.o:
-	clang++ sha512.cpp sha512.hpp
+sha512.o: sha512.hpp
+	$(CC) $(CPPFLAGS) -c sha512.cpp
 
-clean: 
-	rm -rf helloomp
+clean:
+	rm -rf $(PROG) $(OBJS)
