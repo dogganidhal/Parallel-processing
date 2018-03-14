@@ -37,6 +37,10 @@ int main(int argc, char *argv[])
     if (argc == 3)
     {
         /* PARALLEL */
+        #pragma omp parallel for
+        for (size_t index = 0; index < SIZE; index++)
+            hashes[index] = sha512(string_for_index(index));
+        /* ANOTHER WAY TO DO IT
         #pragma omp parallel
         {
             #pragma omp sections
@@ -63,6 +67,7 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        */
     } else 
     {
         /* SEQUENTIAL */
