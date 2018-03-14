@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
 
     if (argc == 3)
     {
+        /* PARALLEL */
         #pragma omp parallel
         {
             #pragma omp sections
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
         }
     } else 
     {
+        /* SEQUENTIAL */
         for (size_t index = 0; index < SIZE; index++)
             hashes[index] = sha512(string_for_index(index));
     }
@@ -71,9 +73,6 @@ int main(int argc, char *argv[])
     
 
     auto end = chrono::high_resolution_clock::now();
-
-    // for (size_t i = 0; i < SIZE ; i ++)
-    //     cout << hashes[i] << endl;
 
     cout << "Time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
 
