@@ -1,36 +1,42 @@
 
 
 #include <iostream>
+#include <vector>
+#include <string>
 #include <omp.h>
+#include "sha512.hpp"
 
 using namespace std;
 
-/**
- * Compile:
- * clang++ -Xpreprocessor -fopenmp -lomp helloomp.cpp
- */
+string string_for_index(size_t index)
+{
+    
+    return string("|") + to_string(index) + string("|");
+}
 
 int main(int argc, char *argv[])
 {
 
-    int nthreads, tid;
+    const size_t SIZE = 1000000;
+    const size_t section_count = 5;
+    const size_t values_per_section = SIZE / section_count;
 
-    /* Fork a team of threads giving them their own copies of variables */
-    #pragma omp parallel private(nthreads, tid)
+    string hashes[SIZE];
+    
+    #pragma omp parallel
     {
-
-        /* Obtain thread number */
-        tid = omp_get_thread_num(); 
-        cout << "Hello World from thread = " << tid << endl;
-
-        /* Only master thread does this */
-        if (tid == 0) 
+        #pragma omp sections
         {
-            nthreads = omp_get_num_threads();
-            cout << "Number of threads = " << nthreads << endl;
+            for (size_t i = 0; i < section_count; i++)
+            {
+                #pragma omp section
+                for (size_t index = i * values_per_section; index < (i + 1) * values_per_section; index++)
+                    hashes[index] = sha512(string_for_index(index));
+            }
         }
-
-    }  /* All threads join master thread and disband */
+    }
+    for (size_t i = 0; i < SIZE ; i ++)
+        cout << hashes[i] << endl;
 
     return EXIT_SUCCESS;
 }

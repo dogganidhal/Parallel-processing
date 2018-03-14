@@ -1,10 +1,13 @@
 
 
+main: helloomp.o sha512.o
+	clang++ -Xpreprocessor -fopenmp -lomp helloomp.o -o helloomp
 
-main: helloomp.o
-	clang++ -Xpreprocessor -fopenmp -lomp helloomp.cpp -o helloomp
-	rm helloomp.o
+helloomp.o: sha512.hpp
+	clang++ helloomp.cpp sha512.hpp
 
+sha512.o:
+	clang++ sha512.cpp sha512.hpp
 
 clean: 
 	rm -rf helloomp
