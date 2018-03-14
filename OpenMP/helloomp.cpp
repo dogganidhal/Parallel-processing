@@ -22,7 +22,13 @@ string string_for_index(size_t index)
 int main(int argc, char *argv[])
 {
 
-    const size_t SIZE = 10000000;
+    if (argc < 2) 
+    {
+        cout << "Usage : ./omptest [-p] number_of_iterations" << endl;
+        exit(EXIT_FAILURE);   
+    }
+
+    const size_t SIZE = argc == 2 ? atoi(argv[1]) : atoi(argv[2]);
     const size_t values_per_section = SIZE / 4;
 
     vector<string> hashes;
@@ -30,7 +36,7 @@ int main(int argc, char *argv[])
     
     auto begin = Clock::now();
 
-    if (argc == 2 && strcmp(argv[1], "-p") == 0)
+    if (argc == 3)
     {
         #pragma omp parallel
         {
