@@ -3,13 +3,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdio>
-#include <ctime>
 #include <omp.h>
 #include "sha512.hpp"
 
 #include <chrono>
-typedef std::chrono::high_resolution_clock Clock;
+
 
 using namespace std;
 
@@ -34,7 +32,7 @@ int main(int argc, char *argv[])
     vector<string> hashes;
     hashes.reserve(SIZE);
     
-    auto begin = Clock::now();
+    auto begin = chrono::high_resolution_clock::now();
 
     if (argc == 3)
     {
@@ -72,12 +70,12 @@ int main(int argc, char *argv[])
 
     
 
-    auto end = Clock::now();
+    auto end = chrono::high_resolution_clock::now();
 
     // for (size_t i = 0; i < SIZE ; i ++)
     //     cout << hashes[i] << endl;
 
-    cout << "Time elapsed: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << endl;
+    cout << "Time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
 
     return EXIT_SUCCESS;
 }
