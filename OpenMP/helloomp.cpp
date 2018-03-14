@@ -22,9 +22,8 @@ string string_for_index(size_t index)
 int main(int argc, char *argv[])
 {
 
-    const size_t SIZE = 1000000;
-    const size_t section_count = 4;
-    const size_t values_per_section = SIZE / section_count;
+    const size_t SIZE = 10000000;
+    const size_t values_per_section = SIZE / 4;
 
     vector<string> hashes;
     hashes.reserve(SIZE);
@@ -61,11 +60,8 @@ int main(int argc, char *argv[])
         }
     } else 
     {
-        for (size_t i = 0; i < section_count; i++)
-        {
-            for (size_t index = i * values_per_section; index < (i + 1) * values_per_section; index++)
-                hashes[index] = sha512(string_for_index(index));
-        }
+        for (size_t index = 0; index < SIZE; index++)
+            hashes[index] = sha512(string_for_index(index));
     }
 
     
