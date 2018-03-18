@@ -2,7 +2,7 @@
 PROG = omptest
 CC = g++
 CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
-LDFLAGS =  -L ./dependencies -lomp
+LDFLAGS =  -L "$(shell pwd)/dependencies" -lomp
 OBJS = helloomp.o sha512.o
 
 $(PROG) : $(OBJS)
