@@ -1,7 +1,7 @@
 
 PROG = omptest
-CC = clang++
-CPPFLAGS = -Xpreprocessor -fopenmp
+CC = g++
+CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
 LDFLAGS =  -lomp
 OBJS = helloomp.o sha512.o
 
