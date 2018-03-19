@@ -6,6 +6,7 @@
 #include <chrono>
 #include <omp.h>
 #include <string.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -95,6 +96,8 @@ void compress(ifstream &input, ofstream &output)
     output_code(output, MAX_VALUE); /* Output the end of buffer code      */
     output_code(output, 0);         /* This code flushes the output buffer*/
     cout << "\n";
+    output_code_file.close();
+    unlink("outputcodes");
 }
 
 /*
