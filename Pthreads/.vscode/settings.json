@@ -1,0 +1,12 @@
+{
+    "C_Cpp.intelliSenseEngineFallback": "Enabled",
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "cstdlib": "c",
+        "wait.h": "c",
+        "dirent.h": "c",
+        "string.h": "c",
+        "unistd.h": "c",
+        "stdlib.h": "c"
+    }
+}
