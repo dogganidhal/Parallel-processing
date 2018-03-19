@@ -49,30 +49,19 @@ void compress(ifstream &input, ofstream &output)
 
     output_code_file.open("outputcodes", ios::out);
 
-    next_code = 256;                 /* Next code is the next available string code*/
-    for (i = 0; i < TABLE_SIZE; i++) /* Clear out the string table before starting */
+    next_code = 256;
+    for (i = 0; i < TABLE_SIZE; i++)
         code_value[i] = -1;
 
     i = 0;
-    cout << "Compressing...\n";
-    string_code = input.get(); /* Get the first code                         */
-                               /*
-** This is the main loop where it all happens.  This loop runs util all of
-** the input has been exhausted.  Note that it stops adding codes to the
-** table after all of the possible codes have been defined.
-*/
+    string_code = input.get();
     while ((character = input.get()) != (unsigned)EOF)
     {
-        if (++i == 1000) /* Print a * every 1000    */
-        {                /* input characters.  This */
-            i = 0;       /* is just a pacifier.     */
-            cout << "*";
-        }
-        index = find_match(string_code, character); /* See if the string is in */
-        if (code_value[index] != -1)                /* the table.  If it is,   */
-            string_code = code_value[index];        /* get the code value.  If */
-        else                                        /* the string is not in the*/
-        {                                           /* table, try to add it.   */
+        index = find_match(string_code, character);
+        if (code_value[index] != -1)
+            string_code = code_value[index];
+        else
+        {
             if (next_code <= MAX_CODE)
             {
                 code_value[index] = next_code++;
@@ -82,20 +71,14 @@ void compress(ifstream &input, ofstream &output)
 
             output_code_file << string_code << "\n";
 
-            output_code(output, string_code); /* When a string is found  */
-            string_code = character;          /* that is not in the table*/
-        }                                     /* I output the last string*/
-    }                                         /* after adding the new one*/
-                                              /*
-** End of the main loop.
-*/
-    output_code(output, string_code);         /* Output the last code               */
-
+            output_code(output, string_code);
+            string_code = character;
+        }
+    }
+    output_code(output, string_code);
     output_code_file << string_code << "\n";
-
-    output_code(output, MAX_VALUE); /* Output the end of buffer code      */
-    output_code(output, 0);         /* This code flushes the output buffer*/
-    cout << "\n";
+    output_code(output, MAX_VALUE);
+    output_code(output, 0);
     output_code_file.close();
     unlink("outputcodes");
 }
@@ -142,64 +125,32 @@ void expand(istream &input, ostream &output)
     unsigned int new_code;
     unsigned int old_code;
     int character;
-    int counter;
     unsigned char *string;
     ofstream input_code_file;
 
-    next_code = 256; /* This is the next available code to define */
-    counter = 0;     /* Counter is used as a pacifier.            */
-    cout << "Expanding...\n";
+    next_code = 256;
 
-    old_code = input_code(input); /* Read in the first code, initialize the */
-    character = old_code;         /* character variable, and send the first */
-    /*cout << "Old code: " << old_code << "\n";
-  cout << "Old code (char): " << ((char) old_code) << "\n"; */
-
-    output.put((char)old_code); /* code to the output file                */
+    old_code = input_code(input);
+    character = old_code;
+    
+    output.put((char)old_code);
 
     input_code_file.open("inputcodes", ios::out);
 
     input_code_file << old_code << "\n";
-    /*
-**  This is the main expansion loop.  It reads in characters from the LZW file
-**  until it sees the special code used to inidicate the end of the data.
-*/
     while ((new_code = input_code(input)) != (MAX_VALUE))
     {
         input_code_file << new_code << "\n";
-        if (++counter == 1000) /* This section of code prints out     */
-        {                      /* an asterisk every 1000 characters   */
-            counter = 0;       /* It is just a pacifier.              */
-            cout << "*";
-        }
-        /*
-** This code checks for the special STRING+CHARACTER+STRING+CHARACTER+STRING
-** case which generates an undefined code.  It handles it by decoding
-** the last code, and adding a single character to the end of the decode string.
-*/
         if (new_code >= next_code)
         {
             *decode_stack = character;
             string = decode_string(decode_stack + 1, old_code);
         }
-        /*
-** Otherwise we do a straight decode of the new code.
-*/
         else
             string = decode_string(decode_stack, new_code);
-        /*
-** Now we output the decoded string in reverse order.
-*/
         character = *string;
         while (string >= decode_stack)
-        {
-            /* cout << "String: " << *string << "\n"; */
-
             output.put(*string--);
-        }
-        /*
-** Finally, if possible, add a new code to the string table.
-*/
         if (next_code <= MAX_CODE)
         {
             prefix_code[next_code] = old_code;
@@ -208,7 +159,6 @@ void expand(istream &input, ostream &output)
         }
         old_code = new_code;
     }
-    cout << "\n";
 }
 
 /*
@@ -269,10 +219,6 @@ void output_code(ostream &output, unsigned int code)
     output_bit_count += BITS;
     while (output_bit_count >= 8)
     {
-        /* cout << "Output bit buffer: " << output_bit_buffer << "\n";
-  	cout << "Output bit buffer >> 24: " << (output_bit_buffer >> 24) << "\n";
-	cout << "Output bit buffer >> 24 (char): " << (output_bit_buffer >> 24) << "\n";
-    */
         output.put((char)(output_bit_buffer >> 24));
         output_bit_buffer <<= 8;
         output_bit_count -= 8;
@@ -319,12 +265,14 @@ int main(int argc, char *argv[])
     if (code_value == NULL || prefix_code == NULL || append_character == NULL)
     {
         cout << "Fatal error allocating table space!\n";
-        exit(0);
+        exit(EXIT_FAILURE);
     }
 
     compress_input(files, pflag);
 
     auto end = chrono::high_resolution_clock::now();
+
+    cout << files.size() << " files compressed " << "in: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
 
     return EXIT_SUCCESS;
 }
