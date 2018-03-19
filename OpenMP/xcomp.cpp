@@ -30,12 +30,12 @@ unsigned int *prefix_code;        /* This array holds the prefix codes   */
 unsigned char *append_character;  /* This array holds the appended chars */
 unsigned char decode_stack[4000]; /* This array holds the decoded string */
 
-void compress(ifstream &,ofstream &);
+void compress(ifstream &, ofstream &);
 int find_match(int, unsigned int);
 void expand(istream &, ostream &);
 unsigned char *decode_string(unsigned char *, unsigned int);
 int input_code(istream &);
-void output_code(ostream &,unsigned int);
+void output_code(ostream &, unsigned int);
 
 void compress(ifstream &input, ofstream &output)
 {
@@ -276,36 +276,25 @@ void output_code(ostream &output, unsigned int code)
     }
 }
 
-struct ndcomp_args {
-    bool pflag;
-    vector<char *> *input;
-};
-
-ndcomp_args parse_args(int argc, char *argv[])
+void parse_args(int argc, char *argv[], vector<char *> &files, bool &pflag)
 {
-    ndcomp_args args;
-    args.input = new vector<char *>();
-    args.pflag = false;
     for (int i = 1; i < argc; i++)
     {
-        if (strcmp(argv[i], "-p") == 0) args.pflag = true;
-        else args.input->push_back(argv[i]);
+        if (strcmp(argv[i], "-p") == 0)
+            pflag = true;
+        else
+            files.push_back(argv[i]);
     }
-    return args;
 }
 
-void compress_input(ndcomp_args args)
+void compress_input(vector<char *> files, bool pflag)
 {
-    for (int i = 0; i < args.input->size(); i++)
+    int i;
+    for (i = 0; i < files.size(); i++)
     {
-        ifstream file(args.input->at(i));
-        file.seekg(0, file.end);
-        long long size = file.tellg();
-        file.seekg(0, file.beg);
-        for (long long j = 0; j < size; j++)
-        {
-            printf("%c", file.get());
-        }
+        ifstream file(files.at(i));
+        ofstream output(string(files.at(i)) + ".xc");
+        compress(file, output);
         file.close();
     }
 }
@@ -313,21 +302,26 @@ void compress_input(ndcomp_args args)
 int main(int argc, char *argv[])
 {
 
-    try 
+    bool pflag = false;
+    vector<char *> files;
+
+    parse_args(argc, argv, files, pflag);
+
+    auto begin = chrono::high_resolution_clock::now();
+
+    code_value = new int[TABLE_SIZE * sizeof(unsigned int)];
+    prefix_code = new unsigned int[TABLE_SIZE * sizeof(unsigned int)];
+    append_character = new unsigned char[TABLE_SIZE * sizeof(unsigned char)];
+
+    if (code_value == NULL || prefix_code == NULL || append_character == NULL)
     {
-
-        ndcomp_args args = parse_args(argc, argv);
-
-        auto begin = chrono::high_resolution_clock::now();
-
-        compress_input(args);
-
-        auto end = chrono::high_resolution_clock::now();
-
-    } catch (exception e) 
-    {
-        return EXIT_FAILURE;
+        cout << "Fatal error allocating table space!\n";
+        exit(0);
     }
+
+    compress_input(files, pflag);
+
+    auto end = chrono::high_resolution_clock::now();
 
     return EXIT_SUCCESS;
 }

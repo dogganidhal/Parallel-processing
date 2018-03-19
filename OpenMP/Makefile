@@ -11,7 +11,7 @@ $(HELLO_WORLD) : $(OBJS)
 	$(CC) $(LDFLAGS) -o $(HELLO_WORLD) $(OBJS)
 
 $(ND_COMP) : xcomp.o
-	$(CC) $(LDFLAGS) -o $(ND_COMP) xcomp.o
+	$(CC) $(LDFLAGS) -o $(ND_COMP) xcomp.o -g
 
 helloomp.o:
 	$(CC) $(CPPFLAGS) -c helloworld.cpp
