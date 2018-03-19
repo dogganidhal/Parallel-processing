@@ -5,6 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <omp.h>
+#include <string.h>
 
 using namespace std;
 
