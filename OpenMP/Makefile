@@ -1,12 +1,17 @@
 
-PROG = omptest
-CC = g++
+HELLO_WORLD = helloworld
+ND_COMP = ndcomp
+CC = clang++
 CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
-LDFLAGS =  -L "$(shell pwd)/dependencies" -lomp
+LDFLAGS =  -L"$(shell pwd)/dependencies/" -lomp
+IFLAGS = -Iinclude
 OBJS = helloomp.o sha512.o
 
-$(PROG) : $(OBJS)
-	$(CC) $(LDFLAGS) -o $(PROG) $(OBJS)
+$(HELLO_WORLD) : $(OBJS)
+	$(CC) $(LDFLAGS) -o $(HELLO_WORLD) $(OBJS)
+
+$(ND_COMP) : ndcomp.o
+	$(CC) $(LDFLAGS) -o $(ND_COMP) ndcomp.o
 
 helloomp.o:
 	$(CC) $(CPPFLAGS) -c helloomp.cpp
@@ -15,4 +20,4 @@ sha512.o: sha512.hpp
 	$(CC) $(CPPFLAGS) -c sha512.cpp
 
 clean:
-	rm -rf $(PROG) $(OBJS)
+	rm -rf $(HELLO_WORLD) $(ND_COMP) ndcomp.o $(OBJS)
