@@ -103,3 +103,5 @@ int main (int argc, char *argv[])
     printf("Time : %lu ms \n", (stop.tv_sec - start.tv_sec) * 1000 + (stop.tv_nsec - start.tv_nsec) / 1000000);
     return EXIT_SUCCESS;
 }
+
+//ERROR INITIALISATION THREADS

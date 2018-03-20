@@ -10,3 +10,6 @@ main: $(OBJ)
 
 clean: 
 	rm -rf *.o main
+
+
+#ALL IS OK
