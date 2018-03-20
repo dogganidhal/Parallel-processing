@@ -1,4 +1,4 @@
-CC = cc -g -Wall -Wextra -Werror -lpthread
+CC = cc -g -Wall -Wextra -Werror #-lpthread
 
 OBJ = main.o
 
