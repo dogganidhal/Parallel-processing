@@ -43,9 +43,9 @@ long int* custom_sort(size_t size, long int* const array)
   return result;
 }
 
-long int random_val(int max, int min)
+long int random_val()
 {
-    return (int)rand()/(RAND_MAX) * (max - min) + min;
+    return (int)rand();
 }
 
 void print_array(long int *array, int length)
@@ -66,7 +66,7 @@ int main (int argc, char *argv[])
         int i, size = atoi(argv[2]);
         long int array[size];
         for (i = 0; i <= size; i++)
-            array[i] = random_val(0, 100000);
+            array[i] = random_val();
         print_array(array, size);
     }
     else if(strcmp(argv[1], "-p") == 0)
