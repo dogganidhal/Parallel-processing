@@ -7,7 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <sys/times.h>
 //#include <pthread.h>
 
 void usage (void)
@@ -30,16 +29,16 @@ void inserer(long int* const tab, int n, int pos, int x)
 	tab[pos] = x;
 }
 
-long int* custom_sort(size_t size, long int* const array)
+long int* custom_sort(size_t size, long int* array)
 {
-  long int* const result = malloc(size * sizeof *result);
+  long int* result = malloc(size * sizeof(long int));
   size_t i;
   for (i = 0; i<size; i++)
   {
 	  int pos = recherche(result, 0, i, array[i]);
 	  inserer(result, i, pos, array[i]);
-  } 
-  free(array);
+  }
+  //free(array);
   return result;
 }
 
@@ -58,6 +57,8 @@ void print_array(long int *array, int length)
 int main (int argc, char *argv[])
 {
     srand((unsigned)time(NULL));
+    struct timespec stop, start;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &start); 
     if(argc != 3)
         usage();
     else if(strcmp(argv[1], "-s") == 0)
@@ -67,13 +68,14 @@ int main (int argc, char *argv[])
         long int array[size];
         for (i = 0; i <= size; i++)
             array[i] = random_val();
-        print_array(array, size);
+        long int *sorted_array = custom_sort(size, array);
     }
     else if(strcmp(argv[1], "-p") == 0)
     {
         printf("Parallel way... \n");
     }
 
+    clock_gettime(CLOCK_MONOTONIC_RAW, &stop);
+    printf("Time : %lu ms \n", (stop.tv_sec - start.tv_sec) * 1000 + (stop.tv_nsec - start.tv_nsec) / 1000000);
     return EXIT_SUCCESS;
-
 }
