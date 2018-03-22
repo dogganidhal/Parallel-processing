@@ -1,7 +1,7 @@
 
 HELLO_WORLD = helloworld
 ND_COMP = xcomp
-CC = clang++
+CC = g++
 CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
 LDFLAGS =  -lomp
 IFLAGS = -Iinclude
