@@ -1,4 +1,4 @@
-CC = cc -g -Wall -Wextra -Werror #-lpthread
+CC = cc -g -Wall -Wextra -lpthread
 
 OBJ = main.o
 
@@ -10,3 +10,6 @@ main: $(OBJ)
 
 clean: 
 	rm -rf *.o main
+
+
+#ALL IS OK
