@@ -1,5 +1,5 @@
-#ifndef SHA512_H
-#define SHA512_H
+#ifndef __SHA512_H__
+#define __SHA512_H__
 
 #include <string>
  
