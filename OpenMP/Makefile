@@ -1,23 +1,34 @@
 
 HELLO_WORLD = helloworld
 XCOMP = xcomp
-CC = clang++
-CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
-LDFLAGS =  -lomp
-IFLAGS = -Iinclude
-OBJS = helloworld.o sha512.o
+XFIND = xfind
 
-$(HELLO_WORLD) : $(OBJS)
-	$(CC) $(LDFLAGS) -o $(HELLO_WORLD) $(OBJS)
+CC++ = clang++
+CC = clang
+
+CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
+CFLAGS = -Xpreprocessor -fopenmp
+LDFLAGS =  -lomp
+
+OBJS = $(wildcard *.o)
+
+$(HELLO_WORLD) :
+	$(CC++) $(LDFLAGS) -o $(HELLO_WORLD)
 
 $(XCOMP) : xcomp.o
-	$(CC) $(LDFLAGS) -o $(XCOMP) xcomp.o -g
+	$(CC++) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
+
+$(XFIND) : xfind.o
+	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o
 
 helloomp.o:
-	$(CC) $(CPPFLAGS) -c helloworld.cpp
+	$(CC++) $(CPPFLAGS) -c helloworld.cpp
 
 sha512.o: sha512.hpp
-	$(CC) $(CPPFLAGS) -c sha512.cpp
+	$(CC++) $(CPPFLAGS) -c sha512.cpp
+
+xfind.o : 
+	$(CC) $(CFLAGS) -c xfind.c
 
 clean:
-	rm -rf $(HELLO_WORLD) $(XCOMP) xcomp.o $(OBJS)
+	rm -rf $(HELLO_WORLD) $(XCOMP) $(XFIND) $(OBJS)
