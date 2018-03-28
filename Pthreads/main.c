@@ -80,11 +80,15 @@ int main (int argc, char *argv[])
     {
         printf("Parallel way... \n");
         int nb_threads = 4;
-        pthread_t thread[nb_threads - 1] = {pthread_t thread1, pthread_t thread5, pthread_t thread3, pthread_t thread4};
+
+        thread_t thread[nb_threads];
+
         int i, size = atoi(argv[2]);
         for (i = 0; i < nb_threads; i++)
         {
-            if(pthread_create(&thread[i], NULL, computation, &size) == -1)
+            thread_t t;
+            thread[i] = t;
+            if(pthread_create(&t, NULL, computation, &size) == -1)
             {
 	            perror("pthread_create");
 	            return EXIT_FAILURE;
