@@ -4,8 +4,11 @@
 #include <string.h>
 #include <fcntl.h>
 #include <assert.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <sys/dir.h>
+#include <sys/types.h>
+#include "chrono.h"
 
 typedef enum { PARALLEL, SEQUENTIAL } processing_mode;
 
@@ -31,10 +34,11 @@ void parse_args(int argc, char *argv[], processing_mode *mode, char **file_name)
 
 char *append_path(const char *basepath, const char *subpath)
 {
-     char *newpath = malloc((strlen(basepath) + strlen(subpath) + 2) * sizeof(char));
+    char *newpath = malloc((strlen(basepath) + strlen(subpath) + 2) * sizeof(char));
     
     strcpy(newpath, basepath);
-    strcat(newpath, "/");
+    if (strcmp(basepath, "/") != 0)
+        strcat(newpath, "/");
     strcat(newpath, subpath);
     
     return newpath;
@@ -44,29 +48,31 @@ void explore_directory_sequential(const char *path, const char *filename)
 {
     DIR *dir = opendir(path);
     if (dir == NULL) return;
-    
+
     struct dirent *dirent = NULL;
 
     while ((dirent = readdir(dir)) != NULL)
     {
         if (strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0)
             continue;
+
         char *subpath = append_path(path, dirent->d_name);
-        struct stat *filestat = malloc(sizeof(struct stat));
-        stat(subpath, filestat);
+        // struct stat *filestat = malloc(sizeof(struct stat));
+        // stat(subpath, filestat);
 
-        assert(filestat != NULL);
+        // assert(filestat != NULL);
 
-        if (S_ISDIR(filestat->st_mode))
+        if (dirent->d_type == DT_DIR)
         {
             explore_directory_sequential(subpath, filename);
             free(subpath);
-        } else if (strcmp(dirent->d_name, filename) == 0)
+        } else if (strstr(dirent->d_name, filename) != NULL)
         {
             printf("%s\n", subpath);
         }
     }
-
+    closedir(dir);
+    free(dirent);
 }
 
 void explore_directory_parallel(const char *path, const char *filename)
@@ -86,6 +92,7 @@ void explore_directory_parallel(const char *path, const char *filename)
         entries[number_of_entries - 1] = dirent;
     }
 
+    #pragma omp parallel for
     for (size_t index = 0; index < number_of_entries; index++)
     {
         if (strcmp(entries[index]->d_name, ".") == 0 || strcmp(entries[index]->d_name, "..") == 0)
@@ -100,7 +107,7 @@ void explore_directory_parallel(const char *path, const char *filename)
         {
             explore_directory_parallel(subpath, filename);
             free(subpath);
-        } else if (strcmp(entries[index]->d_name, filename) == 0)
+        } else if (strstr(entries[index]->d_name, filename) != NULL)
         {
             paths = realloc(paths, (++number_of_paths) * sizeof(char *));
             paths[number_of_paths - 1] = subpath;
@@ -128,7 +135,15 @@ int main(int argc, char *argv[])
 
     parse_args(argc, argv, &mode, &filename);
 
+    timeinterval_t begin = now();
+
     look_for_file(filename, mode);
+
+    timeinterval_t end = now();
+
+    long long elapsed = time_elapsed(begin, end, MILLISECONDS);
+
+    printf("time: %lld ms\n", elapsed);
 
     return EXIT_SUCCESS;
 }
