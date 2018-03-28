@@ -6,7 +6,7 @@ OBJ = main.o
 	$(CC) -c -o $@ $<
 
 main: $(OBJ)
-	gcc -o $@ $^
+	$(CC) -o $@ $^
 
 clean: 
 	rm -rf *.o main

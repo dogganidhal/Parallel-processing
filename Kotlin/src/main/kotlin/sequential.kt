@@ -2,7 +2,7 @@ import kotlin.system.measureTimeMillis
 
 fun main(args:Array<String>){
 
-    var array = Array(10000){0} //Initialise un tableau de 1M de cellules à 0
+    var array = Array(100000){0} //Initialise un tableau de 1M de cellules à 0
 
     val time = measureTimeMillis({
         for (i in 0..(array.count() - 1))
@@ -12,11 +12,11 @@ fun main(args:Array<String>){
         }
     })
 
-    //println("Time: " + time)
+    println("Time: $time ms")
 
-    for (i in 0..(array.count() - 1))
+    /*for (i in 0..(array.count() - 1))
     {
         println(array[i])
-    }
+    }*/
     
 }

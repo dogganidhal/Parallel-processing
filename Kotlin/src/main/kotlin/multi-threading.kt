@@ -14,10 +14,10 @@ fun main(args: Array<String>)
         }
     })
 
-    //println("Time: " + time)
+    println("Time: $time ms")
 
-    for (i in 0..(array.count() - 1))
+    /*for (i in 0..(array.count() - 1))
     {
         println(array[i])
-    }
+    }*/
 }

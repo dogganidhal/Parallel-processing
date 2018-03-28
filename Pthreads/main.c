@@ -61,6 +61,7 @@ void *computation(void* arg)
             array[i] = random_val();
         
         long int *sorted_array = custom_sort(size, array);
+        return NULL;
 }
 
 int main (int argc, char *argv[])
@@ -81,12 +82,12 @@ int main (int argc, char *argv[])
         printf("Parallel way... \n");
         int nb_threads = 4;
 
-        thread_t thread[nb_threads];
+        pthread_t thread[nb_threads];
 
         int i, size = atoi(argv[2]);
         for (i = 0; i < nb_threads; i++)
         {
-            thread_t t;
+            pthread_t t;
             thread[i] = t;
             if(pthread_create(&t, NULL, computation, &size) == -1)
             {
@@ -95,7 +96,7 @@ int main (int argc, char *argv[])
             }
         }
         for (i = 0; i < nb_threads; i++)
-        { 
+        {
             if(pthread_join(thread[i], NULL)) 
             {
 	            perror("pthread_join");
