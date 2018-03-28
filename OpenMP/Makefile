@@ -18,8 +18,8 @@ $(HELLO_WORLD) :
 $(XCOMP) : xcomp.o
 	$(CC++) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
 
-$(XFIND) : xfind.o
-	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o
+$(XFIND) : xfind.o chrono.h
+	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o 
 
 helloomp.o:
 	$(CC++) $(CPPFLAGS) -c helloworld.cpp
