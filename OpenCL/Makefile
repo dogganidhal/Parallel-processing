@@ -1,15 +1,18 @@
 
 
-CC++ = clang++
+OS = $(shell uname)
+ifeq ($(OS), Darwin)
+CXX = clang++
+endif
 
-# LDFLAGS = -lOpenCL
+LIBS+= -lOpenCL
 
 OBJS = $(wildcard *.o)
 
 HELLO_WORLD = helloWorld
 
 helloWorld : helloWorld.o
-	$(CC++) $(LDFLAGS) -o helloWorld helloWorld.cpp
+	$(CXX) -o helloWorld helloWorld.cpp -framework OpenCL
 
 clean: 
 	rm -rf $(HELLO_WORLD) $(OBJS)
