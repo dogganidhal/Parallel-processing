@@ -3,17 +3,17 @@ HELLO_WORLD = helloworld
 XCOMP = xcomp
 XFIND = xfind
 
-CC++ = clang++
-CC = clang
+CC++ = g++
+CC = cc
 
-CPPFLAGS = -Xpreprocessor -fopenmp -std=c++11
+CPPFLAGS = -fopenmp -std=c++11
 CFLAGS = -Xpreprocessor -fopenmp
 LDFLAGS =  -lomp
 
 OBJS = $(wildcard *.o)
 
 $(HELLO_WORLD) : helloworld.o sha512.o
-	$(CC++) $(LDFLAGS) -o $(HELLO_WORLD) helloworld.o sha512.o
+	$(CC++) $(CPPFLAGS) -o $(HELLO_WORLD) helloworld.o sha512.o
 
 $(XCOMP) : xcomp.o
 	$(CC++) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
