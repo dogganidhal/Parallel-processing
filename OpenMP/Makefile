@@ -12,8 +12,8 @@ LDFLAGS =  -lomp
 
 OBJS = $(wildcard *.o)
 
-$(HELLO_WORLD) :
-	$(CC++) $(LDFLAGS) -o $(HELLO_WORLD)
+$(HELLO_WORLD) : helloworld.o sha512.o
+	$(CC++) $(LDFLAGS) -o $(HELLO_WORLD) helloworld.o sha512.o
 
 $(XCOMP) : xcomp.o
 	$(CC++) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
@@ -21,7 +21,7 @@ $(XCOMP) : xcomp.o
 $(XFIND) : xfind.o chrono.h
 	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o 
 
-helloomp.o:
+helloworld.o:
 	$(CC++) $(CPPFLAGS) -c helloworld.cpp
 
 sha512.o: sha512.hpp

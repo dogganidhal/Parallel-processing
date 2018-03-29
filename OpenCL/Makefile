@@ -1,13 +1,15 @@
 
 
-CC = clang
+CC++ = clang++
+
+# LDFLAGS = -lOpenCL
 
 OBJS = $(wildcard *.o)
 
 HELLO_WORLD = helloWorld
 
 helloWorld : helloWorld.o
-	$(CC) -o helloWorld helloWorld.c
+	$(CC++) $(LDFLAGS) -o helloWorld helloWorld.cpp
 
 clean: 
 	rm -rf $(HELLO_WORLD) $(OBJS)

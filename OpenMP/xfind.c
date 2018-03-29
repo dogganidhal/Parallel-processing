@@ -12,14 +12,17 @@
 
 typedef enum { PARALLEL, SEQUENTIAL } processing_mode;
 
-void parse_args(int argc, char *argv[], processing_mode *mode, char **file_name)
+void parse_args(int argc, char *argv[], processing_mode *mode, char **file_name, int *matching_flag)
 {
+    *matching_flag = 0;
     for (int index = 0; index < argc; index++)
     {
-        if (strcmp(argv[index], "-s") == 0 || strcmp(argv[index], "--sequential") == 0)
+        if (strcmp(argv[index], "--sequential") == 0)
             *mode = SEQUENTIAL;
-        else if (strcmp(argv[index], "-p") == 0 || strcmp(argv[index], "--parallel") == 0)
+        else if (strcmp(argv[index], "--parallel") == 0)
             *mode = PARALLEL;
+        else if (strcmp(argv[index], "--match") == 0)
+            *matching_flag = 1;
         else if (*argv[index] == '-')
         {
             fprintf(stderr, "non-reconized option %s\n", argv[index]);
@@ -44,7 +47,7 @@ char *append_path(const char *basepath, const char *subpath)
     return newpath;
 }
 
-void explore_directory_sequential(const char *path, const char *filename)
+void explore_directory_sequential(const char *path, const char *filename, int matching_flag)
 {
     DIR *dir = opendir(path);
     if (dir == NULL) return;
@@ -55,21 +58,15 @@ void explore_directory_sequential(const char *path, const char *filename)
     {
         if (strcmp(dirent->d_name, ".") == 0 || strcmp(dirent->d_name, "..") == 0)
             continue;
-
         char *subpath = append_path(path, dirent->d_name);
-        // struct stat *filestat = malloc(sizeof(struct stat));
-        // stat(subpath, filestat);
-
-        // assert(filestat != NULL);
-
         if (dirent->d_type == DT_DIR)
         {
-            explore_directory_sequential(subpath, filename);
+            explore_directory_sequential(subpath, filename, matching_flag);
             free(subpath);
-        } else if (strstr(dirent->d_name, filename) != NULL)
-        {
+        } else if (!matching_flag && strstr(dirent->d_name, filename) != NULL)
             printf("%s\n", subpath);
-        }
+        else if (matching_flag && strcmp(dirent->d_name, filename) == 0)
+            printf("%s\n", subpath);
     }
     closedir(dir);
     free(dirent);
@@ -114,30 +111,37 @@ void explore_directory_parallel(const char *path, const char *filename)
         }
     }
 
+    closedir(dir);
+    free(dirent);
+
     for (size_t index = 0; index < number_of_paths; index++)
         printf("%s\n", paths[index]);
+    
+    free(paths);
+    free(entries);
 
 }
 
-void look_for_file(const char *filename, processing_mode mode)
+void look_for_file(const char *filename, processing_mode mode, int matching_flag)
 {
     if (mode == PARALLEL)
         explore_directory_parallel("/", filename);
     else 
-        explore_directory_sequential("/", filename);
+        explore_directory_sequential("/", filename, matching_flag);
 }
 
 int main(int argc, char *argv[])
 {
 
+    int matching_flag = 0;
     processing_mode mode;
     char *filename = NULL;
 
-    parse_args(argc, argv, &mode, &filename);
+    parse_args(argc, argv, &mode, &filename, &matching_flag);
 
     timeinterval_t begin = now();
 
-    look_for_file(filename, mode);
+    look_for_file(filename, mode, matching_flag);
 
     timeinterval_t end = now();
 
