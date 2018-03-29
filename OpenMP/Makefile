@@ -3,29 +3,30 @@ HELLO_WORLD = helloworld
 XCOMP = xcomp
 XFIND = xfind
 
-CC++ = g++
-CC = cc
+OS = $(shell uname)
+ifeq ($(OS), Darwin)
+CXX = clang++
+endif
 
 CPPFLAGS = -fopenmp -std=c++11
-CFLAGS = -Xpreprocessor -fopenmp
-LDFLAGS =  -lomp
+CFLAGS = -fopenmp
 
 OBJS = $(wildcard *.o)
 
-$(HELLO_WORLD) : helloworld.o sha512.o
-	$(CC++) $(CPPFLAGS) -o $(HELLO_WORLD) helloworld.o sha512.o
+$(HELLO_WORLD) : helloworld.o
+	$(CXX) -o $(HELLO_WORLD) helloworld.o $(CPPFLAGS)
 
 $(XCOMP) : xcomp.o
-	$(CC++) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
+	$(CXX) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
 
 $(XFIND) : xfind.o chrono.h
 	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o 
 
 helloworld.o:
-	$(CC++) $(CPPFLAGS) -c helloworld.cpp
+	$(CXX) $(CPPFLAGS) -c helloworld.cpp
 
 sha512.o: sha512.hpp
-	$(CC++) $(CPPFLAGS) -c sha512.cpp
+	$(CXX) $(CPPFLAGS) -c sha512.cpp
 
 xfind.o : 
 	$(CC) $(CFLAGS) -c xfind.c

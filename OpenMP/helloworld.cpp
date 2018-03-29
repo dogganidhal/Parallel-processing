@@ -5,6 +5,7 @@
 #include <string>
 #include <chrono>
 #include <omp.h>
+#include "string.h"
 
 using namespace std;
 
@@ -21,7 +22,7 @@ int main(int argc, char *argv[])
 
     if (argc != 3) 
     {
-        cout << "Usage : ./helloworld [-ps] number_of_iterations" << endl;
+        cout << "Usage : ./helloworld [-p|s] number_of_iterations" << endl;
         exit(EXIT_FAILURE);
     }
 
