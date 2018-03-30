@@ -8,7 +8,7 @@
 #include <sys/stat.h>
 #include <sys/dir.h>
 #include <sys/types.h>
-#include "chrono.h"
+#include "../helpers/chrono.h"
 
 typedef enum { PARALLEL, SEQUENTIAL } processing_mode;
 

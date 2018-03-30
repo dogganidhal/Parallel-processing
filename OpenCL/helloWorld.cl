@@ -1,7 +1,10 @@
-
-__kernel void square(__global float* input, __global float* output, const unsigned int count)
+__kernel void compute(const size_t numberOfIterations, __global size_t *values)
 {
-    int i = get_global_id(0);
-    if(i < count)
-    output[i] = input[i] * input[i];
+    for (size_t index = 0; index < numberOfIterations; index++)
+    {
+        size_t sum = 0;
+        for (size_t i = 0; i < index; i++)
+            sum += i;
+        values[index] = sum;
+    }
 }

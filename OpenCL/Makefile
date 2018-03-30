@@ -5,14 +5,18 @@ ifeq ($(OS), Darwin)
 CXX = clang++
 endif
 
-LIBS+= -lOpenCL
+LDFLAGS = -framework OpenCL
+IFLAGS = -I../helpers/
 
 OBJS = $(wildcard *.o)
 
 HELLO_WORLD = helloWorld
 
 helloWorld : helloWorld.o
-	$(CXX) -o helloWorld helloWorld.cpp -framework OpenCL
+	$(CC) -o helloWorld helloWorld.o $(LDFLAGS) $(IFLAGS)
+
+helloWorld.o:
+	$(CC) -c helloWorld.c $(IFLAGS)
 
 clean: 
 	rm -rf $(HELLO_WORLD) $(OBJS)
