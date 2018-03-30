@@ -1,9 +1,13 @@
 
+#ifdef __APPLE__
+#include <OpenCL/cl.h>
+#else
+#include <CL/cl.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <OpenCL/Opencl.h>
 #include "chrono.h"
 #include "io.h"
 
