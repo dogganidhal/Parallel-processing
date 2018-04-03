@@ -13,7 +13,7 @@ extern "C" {
 
 char *readFile(const char *path)
 {
-    FILE *file = fopen(path, "rb");
+    FILE *file = fopen(path, "r");
     assert(file != NULL);
 
     fseek(file, 0, SEEK_END);
