@@ -1,5 +1,5 @@
 
-HELLO_WORLD = helloworld
+HELLO_WORLD = omp
 XCOMP = xcomp
 XFIND = xfind
 

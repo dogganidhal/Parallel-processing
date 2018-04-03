@@ -10,10 +10,10 @@ IFLAGS = -I../helpers/
 
 OBJS = $(wildcard *.o)
 
-HELLO_WORLD = helloWorld
+HELLO_WORLD = ocl
 
-helloWorld : helloWorld.o
-	$(CC) -o helloWorld helloWorld.o $(LDFLAGS) $(IFLAGS)
+$(HELLO_WORLD) : helloWorld.o
+	$(CC) -o $(HELLO_WORLD) helloWorld.o $(LDFLAGS) $(IFLAGS)
 
 helloWorld.o:
 	$(CC) -c helloWorld.c $(IFLAGS)
