@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     auto end = chrono::high_resolution_clock::now();
 
-    cout << SIZE << "," << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << endl;
+    cout << "time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
 
     return EXIT_SUCCESS;
 }
