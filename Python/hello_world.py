@@ -35,7 +35,7 @@ def compute_sequentially(iterations):
     return measure_time(lambda: sum_for_range(range(0, iterations)), TimeUnit.MILLISECONDS)
 
 def compute_concurrently(iterations):
-    pool = Pool(processes=4)
+    pool = Pool(processes=16)
     return measure_time(lambda: pool.map(sum_for_index, range(0, iterations)), TimeUnit.MILLISECONDS)
 
 if __name__ == '__main__':
