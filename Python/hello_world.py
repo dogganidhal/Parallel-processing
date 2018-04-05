@@ -53,4 +53,4 @@ if __name__ == '__main__':
         print("Usage: python -[p|s] iterations")
         exit(1)
 
-    print("time elapsed {0}\n".format(int(t)))
+    print("{0}, {1}".format(sys.argv[2], int(t)))

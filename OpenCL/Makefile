@@ -12,6 +12,10 @@ OBJS = $(wildcard *.o)
 
 HELLO_WORLD = ocl
 
+ifdef SILENT
+.SILENT:
+endif
+
 $(HELLO_WORLD) : helloWorld.o
 	$(CC) -o $(HELLO_WORLD) helloWorld.o $(LDFLAGS) $(IFLAGS)
 

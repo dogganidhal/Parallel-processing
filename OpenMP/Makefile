@@ -13,6 +13,10 @@ CFLAGS = -fopenmp
 
 OBJS = $(wildcard *.o)
 
+ifdef SILENT
+.SILENT:
+endif
+
 $(HELLO_WORLD) : helloworld.o
 	$(CXX) -o $(HELLO_WORLD) helloworld.o $(CPPFLAGS)
 
