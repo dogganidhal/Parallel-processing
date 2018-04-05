@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     if (argc != 3) 
     {
-        cout << "Usage : ./helloworld [-p|s] number_of_iterations" << endl;
+        cout << "Usage : ./omp [-p|s] number_of_iterations" << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -35,17 +35,25 @@ int main(int argc, char *argv[])
     if (strcmp(argv[1], "-p") == 0)
     {
         /* PARALLEL */
-        #pragma omp parallel for
+        #pragma omp parallel for schedule(dynamic, 2)
         for (size_t index = 0; index < SIZE; index++)
-            sums[index] = sumForIndex(index);
+        {
+            long long sum = 0;
+            for (size_t i = 0; i < index; i++)
+                sum += i;   
+        }
     } else if (strcmp(argv[1], "-s") == 0)
     {
         /* SEQUENTIAL */
         for (size_t index = 0; index < SIZE; index++)
-            sums[index] = sumForIndex(index);
+        {
+            long long sum = 0;
+            for (size_t i = 0; i < index; i++)
+                sum += i;   
+        }
     } else 
     {
-        cout << "Usage: ./helloworld [-ps] number_of_iterations" << endl;
+        cout << "Usage: ./omp [-p|s] number_of_iterations" << endl;
         exit(EXIT_FAILURE);
     }
 
