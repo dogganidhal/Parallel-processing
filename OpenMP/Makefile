@@ -10,11 +10,12 @@ endif
 
 CPPFLAGS = -fopenmp -std=c++11
 CFLAGS = -fopenmp
+IFLAGS = -I../helpers/
 
 OBJS = $(wildcard *.o)
 
 $(HELLO_WORLD) : helloworld.o
-	$(CXX) -o $(HELLO_WORLD) helloworld.o $(CPPFLAGS)
+	$(CXX) -o $(HELLO_WORLD) helloworld.o $(CPPFLAGS) $(IFLAGS)
 
 $(XCOMP) : xcomp.o
 	$(CXX) $(LDFLAGS) -o $(XCOMP) -g xcomp.o
@@ -23,7 +24,7 @@ $(XFIND) : xfind.o chrono.h
 	$(CC) $(LDFLAGS) -o $(XFIND) -g xfind.o 
 
 helloworld.o:
-	$(CXX) $(CPPFLAGS) -c helloworld.cpp
+	$(CXX) $(CPPFLAGS) -c helloworld.cpp $(IFLAGS)
 
 sha512.o: sha512.hpp
 	$(CXX) $(CPPFLAGS) -c sha512.cpp

@@ -1,12 +1,14 @@
-CC = cc -g -Wall -Wextra -lpthread
+
+IFLAGS = -I../helpers/
+CPPFLAGS = -std=c++11 -Wall -Wextra
 
 OBJ = main.o
 
-%.o: %.c
-	$(CC) -c -o $@ $<
+main: main.o
+	$(CXX) -o main main.o $(CPPFLAGS) $(IFLAGS)
 
-main: $(OBJ)
-	$(CC) -o $@ $^
+main.o:
+	$(CXX) -c main.cpp $(IFLAGS) $(CPPFLAGS)
 
 clean: 
 	rm -rf *.o main

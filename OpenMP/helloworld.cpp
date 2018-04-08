@@ -3,8 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <chrono>
 #include <omp.h>
+#include "chrono.h"
 #include "string.h"
 
 using namespace std;
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     vector<long long> sums;
     sums.reserve(SIZE);
     
-    auto begin = chrono::high_resolution_clock::now();
+    auto begin = now();
 
     if (strcmp(argv[1], "-p") == 0)
     {
@@ -57,9 +57,9 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    auto end = chrono::high_resolution_clock::now();
+    auto end = now();
 
-    cout << "time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
+    cout << "time elapsed: " << time_elapsed(begin, end, MILLISECONDS) << " ms" << endl;
 
     return EXIT_SUCCESS;
 }

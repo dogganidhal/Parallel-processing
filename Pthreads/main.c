@@ -3,10 +3,10 @@
          décrivant une interface de programmation
              permettant de gérer des threads. */
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 #include <pthread.h>
 
 void usage (void)
