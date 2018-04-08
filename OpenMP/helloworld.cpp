@@ -5,20 +5,16 @@
 #include <string>
 #include <chrono>
 #include <omp.h>
-#include "sha512.hpp"
+#include "string.h"
 
 using namespace std;
 
-string randomString(unsigned short length)
+long long sumForIndex(size_t index)
 {
-    static const char alphanum[] =
-        "0123456789"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-    char randomString[length];
-    for (size_t index = 0; index < length; index++)
-        randomString[index] = alphanum[rand() % (sizeof(alphanum) - 1)];
-    return string(randomString);
+    long long sum = 0;
+    for (size_t i = 0; i < index; i++)
+        sum += i;
+    return sum;
 }
 
 int main(int argc, char *argv[])
@@ -26,36 +22,44 @@ int main(int argc, char *argv[])
 
     if (argc != 3) 
     {
-        cout << "Usage : ./helloworld [-ps] number_of_iterations" << endl;
+        cout << "Usage : ./omp [-p|s] number_of_iterations" << endl;
         exit(EXIT_FAILURE);
     }
 
     const size_t SIZE = atoi(argv[2]);
-    vector<string> hashes;
-    hashes.reserve(SIZE);
+    vector<long long> sums;
+    sums.reserve(SIZE);
     
     auto begin = chrono::high_resolution_clock::now();
 
     if (strcmp(argv[1], "-p") == 0)
     {
         /* PARALLEL */
-        #pragma omp parallel for
+        #pragma omp parallel for schedule(dynamic, 2)
         for (size_t index = 0; index < SIZE; index++)
-            hashes[index] = sha512(randomString(16));
+        {
+            long long sum = 0;
+            for (size_t i = 0; i < index; i++)
+                sum += i;   
+        }
     } else if (strcmp(argv[1], "-s") == 0)
     {
         /* SEQUENTIAL */
         for (size_t index = 0; index < SIZE; index++)
-            hashes[index] = sha512(randomString(16));
+        {
+            long long sum = 0;
+            for (size_t i = 0; i < index; i++)
+                sum += i;   
+        }
     } else 
     {
-        cout << "Usage: ./helloworld [-ps] number_of_iterations" << endl;
+        cout << "Usage: ./omp [-p|s] number_of_iterations" << endl;
         exit(EXIT_FAILURE);
     }
 
     auto end = chrono::high_resolution_clock::now();
 
-    cout << "Time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
+    cout << "time elapsed: " << chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() << " ms" << endl;
 
     return EXIT_SUCCESS;
 }
