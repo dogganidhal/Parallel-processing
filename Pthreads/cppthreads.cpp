@@ -5,67 +5,80 @@
 
 // CPP Program to find sum of array
 #include <iostream>
-#include <pthread.h>
+#include <thread>
 #include "chrono.h"
 
-static inline void usage ()
+
+#define NUM_THREADS 4
+
+using namespace std;
+
+static inline void usage()
 {
-    fprintf(stderr, "usage: ./main [-s|-p] \n");
+    fprintf(stderr, "usage: ./main [-s|-p] \n"); 
     exit(1);
 }
- 
-// size of array
-#define MAX 16
- 
-// maximum number of threads
-#define MAX_THREAD 4
-using namespace std;
- 
-int a[] = { 1, 5, 7, 10, 12, 14, 15, 18, 20, 22, 25, 27, 30, 64, 110, 220 };
-int sum[4] = { 0 };
-int part = 0;
- 
-void *sum_array(void* arg)
+
+static inline llu_t sum_for_index(unsigned long index)
 {
- 
-    // Each thread computes sum of 1/4th of array
-    int thread_part = part++;
- 
-    for (int i = thread_part * (MAX / 4); i < (thread_part + 1) * (MAX / 4); i++)
-        sum[thread_part] += i;
-    return NULL;
+    llu_t sum = 0;
+    for (unsigned long i = 0; i < index; i++)
+        sum += i;
+    return sum;
 }
- 
+
+llu_t compute_sequentially(unsigned long size)
+{
+    llu_t res[size];
+    timeinterval_t begin = now();
+    for (unsigned long index = 0; index < size; index++)
+        res[index] = sum_for_index(index);
+    timeinterval_t end = now();
+    return time_elapsed(begin, end, MILLISECONDS);
+}
+
+void compute_on_thread(llu_t res[], unsigned long offset, unsigned long size)
+{
+    for (unsigned long index = offset; index < offset + size; index++)
+        res[index] = sum_for_index(index);
+}
+
+llu_t compute_concurrently(unsigned long size)
+{
+    thread threads[NUM_THREADS];
+    llu_t res[size];
+    timeinterval_t begin = now();
+    
+    for (unsigned short index = 0; index < NUM_THREADS; index++)
+    {
+        threads[index] = thread([index, &res, size] () {
+            unsigned long block = size / NUM_THREADS;
+            unsigned long offset = index * block;
+            for (unsigned long index = offset; index < offset + block; index++)
+            res[index] = sum_for_index(index);
+        });
+    }
+        
+    for (unsigned short index = 0; index < NUM_THREADS; index++)
+        threads[index].join();
+
+    timeinterval_t end = now();
+    return time_elapsed(begin, end, MILLISECONDS);
+}
+
 int main (int argc, char *argv[])
 {
-
-    auto begin = now();
-
-    if(argc != 3)
-        usage();
-    else if(strcmp(argv[1], "-s") == 0)
-    {
-        printf("Sequential way... \n");
-        int size = atoi(argv[2]);
-        sum_array(&size);
-    }
-    else if(strcmp(argv[1], "-p") == 0)
-    {
-        printf("Parallel way... \n");
- 
-        pthread_t threads[MAX_THREAD];
- 
-        // Creating 4 threads
-        for (int i = 0; i < MAX_THREAD; i++)
-            pthread_create(&threads[i], NULL, sum_array, (void*)NULL);
- 
-        // joining 4 threads i.e. waiting for all 4 threads to complete
-        for (int i = 0; i < MAX_THREAD; i++)
-            pthread_join(threads[i], NULL);
-    }
     
-    auto end = now();
+    if (argc != 3) usage();
+    llu_t t = 0;
+    if (strcmp(argv[1], "-s") == 0)
+        t = compute_sequentially(atoi(argv[2]));
+    else if (strcmp(argv[1], "-p") == 0)
+        t = compute_concurrently(atoi(argv[2]));
+    else 
+        usage();
 
-    printf("Time : %llu ms \n", time_elapsed(begin, end, MILLISECONDS));
+    printf("time elapsed: %llu ms\n", t);
+
     return EXIT_SUCCESS;
 }
