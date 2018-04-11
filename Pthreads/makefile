@@ -1,17 +1,24 @@
 
 IFLAGS = -I../helpers/
-CPPFLAGS = -std=c++11 -Wall -Wextra
+CFLAGS = -Wall -Wextra
+CPPFLAGS = -std=c++11 $(CFLAGS)
 
-OBJ = main.o
+OBJ = $(wildcard *.o)
+TARGETS = pthreads cppthreads
 
-main: main.o
-	$(CXX) -o main main.o $(CPPFLAGS) $(IFLAGS)
+pthreads: pthreads.o
+	$(CC) -o pthreads pthreads.o $(CFLAGS) $(IFLAGS)
 
-main.o:
-	$(CXX) -c main.cpp $(IFLAGS) $(CPPFLAGS)
+pthreads.o:
+	$(CC) -c pthreads.c $(IFLAGS) $(CFLAGS)
+
+cppthreads: cppthreads.o
+	$(CXX) -o cppthreads cppthreads.o $(CPPFLAGS) $(IFLAGS)
+
+cppthreads.o:
+	$(CXX) -c cppthreads.cpp $(IFLAGS) $(CPPFLAGS)
+
+
 
 clean: 
-	rm -rf *.o main
-
-
-#ALL IS OK
+	rm -rf *.o $(TARGETS)
