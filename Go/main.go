@@ -33,7 +33,6 @@ func computeConcurrently(iterations int) {
 		}(i)
 	}
 	waitGroup.Wait()
-	return
 }
 
 func main() {
