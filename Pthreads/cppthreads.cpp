@@ -55,7 +55,7 @@ llu_t compute_concurrently(unsigned long size)
             unsigned long block = size / NUM_THREADS;
             unsigned long offset = index * block;
             for (unsigned long index = offset; index < offset + block; index++)
-            res[index] = sum_for_index(index);
+              res[index] = sum_for_index(index);
         });
     }
         
