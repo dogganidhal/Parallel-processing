@@ -5,9 +5,13 @@ IFLAGS = -I../helpers/ -I../helpers/
 
 OBJS = $(wildcard *.o)
 
-gcd :
-	$(CC) -o gcd gcd.m $(LDFLAGS) $(IFLAGS)
+.PHONY: objc
+objc :
+	$(CC) -o objc gcd.m $(LDFLAGS) $(IFLAGS)
 
+.PHONY: swift
+swift:
+	swiftc -o swift gcd.swift
 
 clean: 
-	rm -rf gcd $(OBJS)
+	rm -rf objc swift

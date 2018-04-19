@@ -54,7 +54,7 @@ int main(int argc, const char * argv[])
     
     timeinterval_t end = now();
     
-    NSLog(@"time elapsed: %llu ms", time_elapsed(begin, end, MILLISECONDS));
+    printf("time elapsed: %llu ms", time_elapsed(begin, end, MILLISECONDS));
     
     return 0;
 }
