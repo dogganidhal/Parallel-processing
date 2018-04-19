@@ -9,7 +9,7 @@
 #include "chrono.h"
 
 
-#define NUM_THREADS 4
+#define NUM_THREADS 16
 
 using namespace std;
 
