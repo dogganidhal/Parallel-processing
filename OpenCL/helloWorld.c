@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
         timeElapsed = computeConcurrently(numberOfIterations);
     }
     
-    printf("time elapsed: %llu\n", timeElapsed);
+    printf("%llu", timeElapsed);
     
     return EXIT_SUCCESS;
 }

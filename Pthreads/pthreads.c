@@ -81,7 +81,7 @@ int main (int argc, char *argv[])
     else 
         usage();
 
-    printf("time elapsed: %llu ms\n", t);
+    printf("%llu", t);
 
     return EXIT_SUCCESS;
 }

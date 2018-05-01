@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 
     auto end = now();
 
-    cout << "time elapsed: " << time_elapsed(begin, end, MILLISECONDS) << " ms" << endl;
+    cout << time_elapsed(begin, end, MILLISECONDS);
 
     return EXIT_SUCCESS;
 }

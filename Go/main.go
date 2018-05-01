@@ -56,6 +56,6 @@ func main() {
 
 	timeElapsed := time.Since(begin)
 
-	println("time elapsed:", timeElapsed/1000000, "ms")
+	println(timeElapsed / 1000000)
 
 }

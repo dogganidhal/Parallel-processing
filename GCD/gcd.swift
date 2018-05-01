@@ -40,6 +40,6 @@ if CommandLine.arguments[1] == "-s" {
 
 let end = DispatchTime.now()
 
-print("time elapsed:", (end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000, "ms")
+print(end.uptimeNanoseconds - start.uptimeNanoseconds) / 1_000_000)
 
 
