@@ -1,8 +1,8 @@
 import kotlin.system.measureTimeMillis
 
-fun main(args:Array<String>){
+fun sequential(array_size: Int){
 
-    var array = Array(100000){0} //Initialise un tableau de 1M de cellules à 0
+    var array = Array(array_size){0} //Initialise un tableau de 1M de cellules à 0
 
     val time = measureTimeMillis({
         for (i in 0..(array.count() - 1))
